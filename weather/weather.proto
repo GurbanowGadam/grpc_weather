@@ -1,7 +1,7 @@
 syntax = "proto3";
+package weather;
 
-option go_package = "github.com/GurbanowGadam/gRPC/api";
-
+option go_package = "github.com/GurbanowGadam/grpc_weather;weather";
 
 service WeatherService {
         rpc QueryWeather(WeatherRequest) returns (stream WeatherResponse);
