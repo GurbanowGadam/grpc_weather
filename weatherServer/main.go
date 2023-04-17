@@ -7,6 +7,7 @@ import (
 	"net"
 
 	"github.com/GurbanowGadam/grpc_weather/weather"
+	"google.golang.org/grpc"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	srv := grps.NewServer()
+	srv := grpc.NewServer()
 	weather.RegisterWeatherServiceServer(srv, &myWeatherService{})
 	fmt.Println("Starting server...")
 	panic(srv.Serve(lis))
@@ -29,11 +30,12 @@ func (m *myWeatherService) ListCities(ctx context.Context, req *weather.ListCiti
 	return &weather.ListCitiesResponse{
 		Items: []*weather.CityEntry{
 			&weather.CityEntry{CityCode: "tkm_ag", CityName: "Ashgabat"},
+			&weather.CityEntry{CityCode: "tkm_mr", CityName: "Mary"},
 		},
 	}, nil
 }
 
-func (m *myWeatherService) QueryWeather(req *weather.WeatherRequest, resp weather.WeatherService_QueryWeatherService) error {
+func (m *myWeatherService) QueryWeather(req *weather.WeatherRequest, resp weather.WeatherService_QueryWeatherServer) error {
 	for {
 		err := resp.Send(&weather.WeatherResponse{Temperature: rand.Float32()*10 + 10})
 		if err != nil {
